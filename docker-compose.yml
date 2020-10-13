@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  test:
+    build: 
+      context: API/.
+    command: bash -c "./wait-for-it.sh 45.80.70.241:5432 -- python manage.py test"
+    container_name: todolist_api_test
+  api:
+    build: 
+      context: API/.
+    command: bash -c "./wait-for-it.sh 45.80.70.241:5432 -- python manage.py makemigrations api_v1 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: todolist_api
+    volumes:
+      - .:/api/API/
+    ports:
+      - "8000:8000"
